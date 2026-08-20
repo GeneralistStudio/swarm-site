@@ -1,0 +1,95 @@
+/* Variable font — font-weight: 100 900 exposes its full weight axis rather
+   than pinning it to one static weight. */
+@font-face {
+  font-family: 'Vibrations';
+  src:
+    url('./assets/fonts/VibrationsVF.woff2') format('woff2'),
+    url('./assets/fonts/VibrationsVF.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Two static weights, one family name — the browser picks the right file
+   based on whatever font-weight is set wherever 'Alte Haas Grotesk' is used. */
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src:
+    url('./assets/fonts/Alte Haas Grotesk.woff2') format('woff2'),
+    url('./assets/fonts/Alte Haas Grotesk.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src:
+    url('./assets/fonts/Alte Haas Grotesk Bold.woff2') format('woff2'),
+    url('./assets/fonts/Alte Haas Grotesk Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------
+   PLACEHOLDER DESIGN TOKENS
+   Structural pass only — colors/type/radii below are loose stand-ins
+   pulled from the reference screenshots, not final decisions. Swap
+   freely in the next pass; every component reads from these variables
+   so a re-skin is mostly a one-file change.
+   --------------------------------------------------------------------- */
+:root {
+  --fg: #1b1c1a;
+  --bg: #eef0e2;
+  --panel-bg: rgba(255, 255, 255, 0.6);
+  --panel-bg-solid: #f4f4ec;
+  --hairline: rgba(27, 28, 26, 0.15);
+  --accent: #1b1c1a;
+  --accent-contrast: #f4f4ec;
+
+  --radius-sm: 5px;
+  --radius-md: 5px;
+  --radius-lg: 22px;
+
+  --font-display: 'Vibrations', Georgia, 'Times New Roman', serif;
+  --font-body: 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --font-alte: 'Alte Haas Grotesk', Georgia, serif;
+
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--fg);
+  background: var(--bg);
+  overflow: hidden;
+  /* everything using the mono/body font reads uppercase by default — the
+     Alte Haas Grotesk header/body copy (About/Swarm panels) explicitly
+     opts back out with text-transform: none */
+  text-transform: uppercase;
+}
+
+button, input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}

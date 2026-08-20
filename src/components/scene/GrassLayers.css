@@ -1,0 +1,54 @@
+.grass-layers {
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* above the sky (0) */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.grass-layer {
+  position: absolute;
+  left: 0;
+  animation-name: grass-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transition: filter 0.6s ease;
+}
+
+@keyframes grass-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* moving exactly one tile-step loops seamlessly, since every tile is an
+       identical copy of the same asset */
+    transform: translateX(calc(-1 * var(--grass-step)));
+  }
+}
+
+.grass-tile {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  mask-repeat: no-repeat;
+  mask-position: bottom center;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: bottom center;
+  -webkit-mask-size: 100% 100%;
+  /* deliberately no transition on background-color: it's a paint property,
+     and animating it on a masked + blurred element forces a repaint/mask
+     re-rasterization on every frame for the whole transition, across every
+     tile in every layer simultaneously — that's what was showing up as a
+     sustained lag spike right at location submit (where the color jumps
+     the most). Color changes now snap instantly instead. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grass-layer {
+    animation: none;
+  }
+  .grass-tile {
+    transition: none;
+  }
+}

@@ -1,0 +1,67 @@
+.nav {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 500;
+  /* the wordmark is styled as literal lowercase text ("swarm") — override
+     body's global uppercase so it doesn't get shouted into "SWARM" */
+  text-transform: none;
+  /* --ink is set on .app-root from the same local-hour clock the sky/grass
+     use — mix-blend-mode was tried here first, but both wordmark instances
+     live inside a transformed (.globe-intro__header) or fixed (.nav)
+     ancestor, which browsers promote to their own compositing layer, so the
+     blend never actually reaches the real page background behind it. */
+  color: var(--ink, #1b1c1a);
+  /* matches TimeOfDayBackground's sky transition exactly */
+  transition: color 8s linear;
+}
+
+.wordmark__reg {
+  font-family: var(--font-alte);
+  font-size: 0.34em;
+  font-weight: 700;
+  vertical-align: super;
+  text-transform: none;
+}
+
+.wordmark--nav {
+  font-size: 40px;
+}
+
+.nav__tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav__tab {
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+  background: var(--panel-bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.nav__tab--active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  .nav { top: 10px; right: 10px; gap: 10px; }
+  .wordmark--nav { font-size: 38px; }
+  .nav__tab { padding: 5px 9px; font-size: 10px; }
+}

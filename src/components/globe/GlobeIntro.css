@@ -1,0 +1,103 @@
+.globe-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 16; /* above the persistent globe (15) so header/footer stay clickable */
+  pointer-events: none;
+}
+
+.globe-intro__header,
+.globe-intro__footer {
+  pointer-events: auto;
+}
+
+.globe-intro__header {
+  position: absolute;
+  top: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  pointer-events: none; /* let globe drag pass through the empty gaps */
+}
+
+.globe-intro__header > * {
+  pointer-events: auto;
+}
+
+.wordmark--hero {
+  font-size: clamp(120px, 15vw, 200px);
+  margin: 0;
+  line-height: 1;
+}
+
+.location-input {
+  display: flex;
+  align-items: center;
+  border: 0.5px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--panel-bg);
+  backdrop-filter: blur(4px);
+  overflow: hidden;
+}
+
+.location-input input {
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  text-transform: uppercase;
+  width: 220px;
+  outline: none;
+}
+
+.location-input button {
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-left: 1px solid var(--hairline);
+}
+
+.globe-intro__footer {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  width: fit-content;
+}
+
+.legend__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7ed957;
+  display: inline-block;
+}
+
+@media (max-width: 640px) {
+  .globe-intro__header { top: 6vh; gap: 14px; }
+  .location-input input { width: 160px; }
+}

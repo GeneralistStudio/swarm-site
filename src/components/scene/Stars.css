@@ -1,0 +1,38 @@
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: 9; /* above sky/grass, below the intro glow (10) and globe (15) */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.stars--active {
+  opacity: var(--stars-opacity, 0.5);
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.85);
+  animation-name: star-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes star-drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    animation: none;
+  }
+}

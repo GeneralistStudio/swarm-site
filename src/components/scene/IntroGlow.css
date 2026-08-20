@@ -1,0 +1,13 @@
+.intro-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  /* background is computed inline — centered on the globe's actual rect */
+  opacity: 0;
+  transition: opacity 0.6s ease, background 0.6s ease;
+}
+
+.intro-glow--active {
+  opacity: 1;
+}

@@ -1,0 +1,27 @@
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12; /* above the sky/grass/stars/glow, below the globe (15) and UI (16+) */
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+}
+
+.noise-frame {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noise-frame {
+    animation: none;
+    opacity: 0;
+  }
+  .noise-frame:first-child {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,65 @@
+.timeline-scrubber {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  padding: 6px 10px;
+  background: var(--panel-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.timeline-year {
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.timeline-track {
+  position: relative;
+  width: 160px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-track input[type='range'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0.01; /* invisible but still interactive; fill bar shows position */
+}
+
+.timeline-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 3px;
+  background: var(--hairline);
+  border-radius: 2px;
+}
+
+.timeline-play {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 2px 4px;
+}
