@@ -15,7 +15,7 @@ const BASE_CONFIG = {
   maxSpeedSwarm: 7,
   maxSpeedWander: 1.2,
   wanderJitter: 0.25,
-  bugSize: 5,
+  bugSize: 4.3,
 
   repelRadiusStart: 260,
   repelDuration: 3500,
