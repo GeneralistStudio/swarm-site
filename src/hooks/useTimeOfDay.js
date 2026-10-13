@@ -4,20 +4,26 @@ import { useEffect, useState } from 'react';
 // accentLow, bottom] colors — the accent stops are narrow bands (see the
 // gradient position template in TimeOfDayBackground) rather than full
 // washes, so they read as "a little" color rather than dominating.
-// Night's accents are the exact RGB inversion of day's (#EDFF85 -> #12007A,
+// Night's accents are the exact RGB inversion of day's (#F0FF8E -> #0F0071,
 // #FBD0D0 -> #042F2F) — see invertHex. Placeholder palette otherwise —
-// swap freely once real design tokens are set.
+// swap freely once real design tokens are set. (The day yellow here is the
+// site's --yellow from index.css — keep them in sync if you change it.)
 const KEYFRAMES = [
-  { hour: 0, colors: ['#0b0c14', '#12007a', '#141522', '#042f2f', '#1b1c1a'] },   // deep night
+  { hour: 0, colors: ['#0b0c14', '#0f0071', '#141522', '#042f2f', '#1b1c1a'] },   // deep night
   { hour: 5, colors: ['#171826', '#241150', '#2c2536', '#0c2b2b', '#3a2a28'] },   // pre-dawn
   { hour: 6.5, colors: ['#3a3350', '#5a3a6f', '#8a6a6f', '#7a5550', '#c99a6b'] }, // dawn
-  { hour: 9, colors: ['#bcd6e6', '#edff85', '#dfe6d8', '#fbd0d0', '#e9e6cf'] },   // morning
-  { hour: 13, colors: ['#cfe6ee', '#edff85', '#e7ecda', '#fbd0d0', '#eef0d8'] },  // midday
+  { hour: 9, colors: ['#bcd6e6', '#f0ff8e', '#dfe6d8', '#fbd0d0', '#e9e6cf'] },   // morning
+  { hour: 13, colors: ['#cfe6ee', '#f0ff8e', '#e7ecda', '#fbd0d0', '#eef0d8'] },  // midday
   { hour: 17, colors: ['#e7cfa8', '#f5e58a', '#e3c2a4', '#f7c9c9', '#dba98f'] },  // late afternoon
   { hour: 19, colors: ['#2c2440', '#4a2a5f', '#6a4a55', '#3a2530', '#c97a4a'] },  // dusk
   { hour: 21, colors: ['#12121f', '#1c0a4a', '#241f2e', '#0c2a2a', '#2e2422'] },  // night
-  { hour: 24, colors: ['#0b0c14', '#12007a', '#141522', '#042f2f', '#1b1c1a'] },
+  { hour: 24, colors: ['#0b0c14', '#0f0071', '#141522', '#042f2f', '#1b1c1a'] },
 ];
+
+// Where the sky's five colors sit down the screen, in percent (top to bottom).
+// TimeOfDayBackground draws the gradient with these; bugContrast.js reads the
+// same numbers to work out what the bugs are drawn against.
+export const SKY_STOPS = [0, 12, 50, 75, 100];
 
 export function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);

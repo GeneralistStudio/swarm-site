@@ -1,6 +1,0 @@
-.persistent-globe {
-  position: fixed;
-  z-index: 15;
-  will-change: opacity;
-  transition: opacity 0.25s ease;
-}

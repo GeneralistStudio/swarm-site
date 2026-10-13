@@ -1,0 +1,340 @@
+/* ============================================================
+   SITE MENU — the hamburger dropdown, top center.
+
+   ▶ TO RESTYLE IT: change the values in the "DESIGN KNOBS" block
+     right below. Save, and the site updates. Everything further
+     down just *uses* those values, so you shouldn't need to touch it.
+   ▶ To rename / reorder the links, edit src/siteConfig.js.
+   ============================================================ */
+.site-menu {
+  /* ---------- DESIGN KNOBS ---------- */
+
+  /* position & size */
+  --menu-top: 16px;            /* gap between the top of the screen and the bar */
+  --menu-width: 260px;         /* width of the bar and of the open card */
+  --menu-bar-height: 36px;     /* height of the closed bar */
+  --menu-radius: 10px;         /* corner roundness */
+
+  /* colors */
+  --menu-bg: rgba(244, 244, 236, 0.55);   /* card background (last number = see-through-ness) */
+  --menu-text: #1b1c1a;                    /* link + icon color */
+  --menu-border: rgba(27, 28, 26, 0.1);    /* thin outline */
+  --menu-blur: 14px;                       /* frosted-glass blur behind the card */
+  --menu-hover-bg: rgba(27, 28, 26, 0.06); /* hamburger button hover tint */
+  --menu-scrim: rgba(0, 0, 0, 0);          /* dims the page behind the open menu.
+                                              try rgba(0, 0, 0, 0.25) */
+  --menu-bg-blur: 16px;                    /* how blurry the page gets at the very top
+                                              when the menu is open (0px = no blur) */
+  --menu-bg-blur-extent: 100vh;            /* how far down the blur reaches before it's
+                                              fully sharp (100vh = the whole page) */
+
+  /* typography */
+  --menu-logo-size: 26px;                  /* the swarm® wordmark in the bar */
+  --menu-link-font: var(--font-alte);      /* Home / Product / Education … */
+  --menu-link-size: 22px;
+  --menu-link-gap: 6px;                    /* breathing room between links */
+  --menu-legal-font: var(--font-body);     /* TERMS • PRIVACY */
+  --menu-legal-size: 9px;
+  --menu-legal-spacing: 0.06em;            /* letter-spacing */
+
+  /* hamburger icon */
+  --menu-icon-size: 18px;
+  --menu-icon-line: 1.5px;                 /* line thickness */
+  --menu-icon-gap: 5px;                    /* distance between the lines */
+
+  /* animation */
+  --menu-duration: 450ms;                  /* how long it takes to open/close */
+  --menu-ease: cubic-bezier(0.32, 0.72, 0, 1); /* the "feel" of the motion */
+  --menu-stagger: 45ms;                    /* delay between each link fading in */
+  --menu-link-delay: 80ms;                 /* wait before the first link appears */
+
+  /* ---------- END KNOBS ---------- */
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 35;
+  pointer-events: none; /* only the card itself is clickable */
+}
+
+/* the invisible (or dimmed) layer behind the card — click it to close */
+.site-menu__scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--menu-scrim);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--menu-duration) var(--menu-ease);
+}
+.site-menu[data-open='true'] .site-menu__scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------- progressive background blur (only while open) ----------
+   Six layers, each blurring the page a bit more than the one below it and
+   each only visible in its own band of the screen — together that gives a
+   blur that's strongest at the top and fades to nothing at the bottom.
+
+   Each layer is only as TALL as its own band (37.5% of the blur's height,
+   positioned by --band) rather than stretching over the whole page and being
+   masked down to a strip. The picture is identical, but the browser only has
+   to blur the strip that's actually visible: about a third of the work,
+   which matters because a backdrop blur re-runs every frame the page
+   behind it moves.
+
+   (Don't put opacity/filter on .site-menu__blur itself: that would stop the
+   layers from seeing the page behind them. Fading is done per layer.) */
+.site-menu__blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--menu-bg-blur-extent);
+  pointer-events: none;
+}
+.site-menu__blur span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* where this band starts, as a fraction of the blur's height */
+  top: calc(var(--menu-bg-blur-extent) * var(--band));
+  height: calc(var(--menu-bg-blur-extent) * 0.375);
+  /* fades in over the band's first third, holds, fades out over the last third */
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, #000 33.333%, #000 66.667%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, #000 33.333%, #000 66.667%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0;
+  visibility: hidden; /* closed = not rendered at all (no GPU cost) */
+  transition:
+    opacity var(--menu-duration) var(--menu-ease),
+    visibility 0s linear var(--menu-duration);
+}
+.site-menu[data-open='true'] .site-menu__blur span {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--menu-duration) var(--menu-ease),
+    visibility 0s;
+}
+.site-menu__blur span:nth-child(1) {
+  --band: 0.625; /* lowest band, lightest blur */
+  -webkit-backdrop-filter: blur(calc(var(--menu-bg-blur) / 32));
+  backdrop-filter: blur(calc(var(--menu-bg-blur) / 32));
+}
+.site-menu__blur span:nth-child(2) {
+  --band: 0.5;
+  -webkit-backdrop-filter: blur(calc(var(--menu-bg-blur) / 16));
+  backdrop-filter: blur(calc(var(--menu-bg-blur) / 16));
+}
+.site-menu__blur span:nth-child(3) {
+  --band: 0.375;
+  -webkit-backdrop-filter: blur(calc(var(--menu-bg-blur) / 8));
+  backdrop-filter: blur(calc(var(--menu-bg-blur) / 8));
+}
+.site-menu__blur span:nth-child(4) {
+  --band: 0.25;
+  -webkit-backdrop-filter: blur(calc(var(--menu-bg-blur) / 4));
+  backdrop-filter: blur(calc(var(--menu-bg-blur) / 4));
+}
+.site-menu__blur span:nth-child(5) {
+  --band: 0.125;
+  -webkit-backdrop-filter: blur(calc(var(--menu-bg-blur) / 2));
+  backdrop-filter: blur(calc(var(--menu-bg-blur) / 2));
+}
+.site-menu__blur span:nth-child(6) {
+  --band: 0; /* top band, full blur — and it stays solid right up to the top edge */
+  -webkit-backdrop-filter: blur(var(--menu-bg-blur));
+  backdrop-filter: blur(var(--menu-bg-blur));
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, #000 33.333%, #000 100%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, #000 33.333%, #000 100%);
+}
+
+/* ---------- the card ---------- */
+.site-menu__card {
+  position: relative;
+  pointer-events: auto;
+  margin: var(--menu-top) auto 0;
+  /* never wider than the space left between the info button and its mirror */
+  width: min(var(--menu-width), calc(100vw - 116px));
+  background: var(--menu-bg);
+  color: var(--menu-text);
+  border: 1px solid var(--menu-border);
+  border-radius: var(--menu-radius);
+  -webkit-backdrop-filter: blur(var(--menu-blur));
+  backdrop-filter: blur(var(--menu-blur));
+  overflow: hidden;
+  animation: site-menu-in 600ms var(--menu-ease) both;
+}
+
+@keyframes site-menu-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- the always-visible bar ---------- */
+.site-menu__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--menu-bar-height);
+  padding: 0 2px 0 12px;
+}
+
+.site-menu__logo {
+  display: inline-flex;
+  color: inherit;
+  text-decoration: none;
+}
+.site-menu .wordmark {
+  font-size: var(--menu-logo-size);
+  color: var(--menu-text); /* fixed color — the card is always light */
+  transition: none;
+}
+
+/* ---------- hamburger button → X ---------- */
+.site-menu__toggle {
+  display: grid;
+  place-items: center;
+  width: var(--menu-bar-height);
+  height: var(--menu-bar-height);
+  padding: 0;
+  border: none;
+  border-radius: calc(var(--menu-radius) - 2px);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.site-menu__toggle:hover {
+  background: var(--menu-hover-bg);
+}
+
+.site-menu__icon {
+  position: relative;
+  display: block;
+  width: var(--menu-icon-size);
+  height: var(--menu-icon-size);
+}
+.site-menu__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: var(--menu-icon-line);
+  margin-top: calc(var(--menu-icon-line) / -2);
+  background: currentColor;
+  transition:
+    transform var(--menu-duration) var(--menu-ease),
+    opacity calc(var(--menu-duration) / 2) ease;
+}
+.site-menu__line:nth-child(1) { transform: translateY(calc(var(--menu-icon-gap) * -1)); }
+.site-menu__line:nth-child(3) { transform: translateY(var(--menu-icon-gap)); }
+
+.site-menu[data-open='true'] .site-menu__line:nth-child(1) { transform: rotate(45deg); }
+.site-menu[data-open='true'] .site-menu__line:nth-child(2) { opacity: 0; }
+.site-menu[data-open='true'] .site-menu__line:nth-child(3) { transform: rotate(-45deg); }
+
+/* ---------- the part that expands ---------- */
+/* grid-template-rows 0fr → 1fr is the trick that lets "height: auto"
+   animate smoothly. visibility keeps closed links out of tab-focus. */
+.site-menu__drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--menu-duration) var(--menu-ease),
+    visibility 0s linear var(--menu-duration);
+}
+.site-menu[data-open='true'] .site-menu__drawer {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--menu-duration) var(--menu-ease),
+    visibility 0s;
+}
+.site-menu__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+.site-menu__content {
+  padding: 8px 16px 16px;
+}
+
+/* ---------- links ---------- */
+.site-menu__links,
+.site-menu__legal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.site-menu__links {
+  text-align: center;
+}
+.site-menu__links a {
+  display: block;
+  padding: var(--menu-link-gap) 0;
+  font-family: var(--menu-link-font);
+  font-size: var(--menu-link-size);
+  line-height: 1.15;
+  text-transform: none;
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.site-menu__links a:hover {
+  opacity: 0.55;
+}
+/* the page you're currently on */
+.site-menu a[aria-current='page'] {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+.site-menu__legal {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  font-family: var(--menu-legal-font);
+  font-size: var(--menu-legal-size);
+  letter-spacing: var(--menu-legal-spacing);
+  text-transform: uppercase;
+}
+.site-menu__legal li + li::before {
+  content: '•';
+  margin: 0 8px;
+}
+.site-menu__legal a {
+  color: inherit;
+  text-decoration: none;
+}
+.site-menu__legal a:hover {
+  opacity: 0.55;
+}
+
+/* links + legal row fade/slide in one after another */
+.site-menu__links li,
+.site-menu__legal {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--menu-duration) var(--menu-ease),
+    transform var(--menu-duration) var(--menu-ease);
+}
+.site-menu[data-open='true'] .site-menu__links li,
+.site-menu[data-open='true'] .site-menu__legal {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--menu-link-delay) + var(--i, 0) * var(--menu-stagger));
+}
+
+/* respect "reduce motion" system setting */
+@media (prefers-reduced-motion: reduce) {
+  .site-menu {
+    --menu-duration: 1ms;
+    --menu-stagger: 0ms;
+    --menu-link-delay: 0ms;
+  }
+  .site-menu__card { animation: none; }
+}

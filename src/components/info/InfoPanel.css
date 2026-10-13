@@ -1,0 +1,304 @@
+/* ============================================================
+   DATA PANEL — the "i" button (top-left) and the panel that slides
+   in from the left when you click it.
+
+   ▶ TO RESTYLE IT: change the values in the "DESIGN KNOBS" block
+     below. Save, and the site updates. Everything further down just
+     *uses* those values.
+   ▶ The panel's empty middle is where the data layer goes (see the
+     comment in InfoPanel.jsx).
+   ============================================================ */
+.info {
+  /* ---------- DESIGN KNOBS ---------- */
+
+  /* position & size */
+  --info-top: 16px;             /* gap from the top of the screen (button + panel) */
+  --info-left: 16px;            /* gap from the left edge */
+  --info-bottom: 16px;          /* gap from the bottom edge (panel) */
+  --info-width: 340px;          /* panel width */
+  --info-padding: 20px;         /* space inside the panel edges */
+  --info-radius: 12px;          /* corner roundness (panel + button) */
+  --info-button-size: 36px;     /* the closed "i" button */
+
+  /* colors */
+  --info-bg: rgba(244, 244, 236, 0.55);   /* panel + button background */
+  --info-text: #1b1c1a;
+  --info-border: rgba(27, 28, 26, 0.1);
+  --info-divider: rgba(27, 28, 26, 0.2);  /* the line under the title */
+  --info-blur: 16px;                      /* frosted-glass blur */
+  --info-hover-bg: rgba(27, 28, 26, 0.06);
+
+  /* typography */
+  --info-title-font: var(--font-alte);
+  --info-title-size: 24px;
+
+  /* animation */
+  --info-duration: 450ms;                              /* slide in/out speed */
+  --info-ease: cubic-bezier(0.32, 0.72, 0, 1);         /* the "feel" of the slide */
+
+  /* globe at the bottom of the panel — it sits right on the panel and the
+     panel's edges crop it */
+  --info-globe-height: 450px;          /* how much room the globe gets above the bottom edge */
+  --info-globe-size: 325px;            /* globe size (bigger than the panel = more cropped) */
+  --info-globe-bottom: 0px;         /* sink it below the bottom edge (more negative = lower) */
+  --info-globe-shift-x: 0px;           /* slide it left (−) or right (+) off-center */
+  --info-globe-min-height: calc(var(--info-globe-size) + 40px);
+                                       /* when the window is short, the empty space above the globe
+                                          shrinks (down to this) so the sections above it still fit */
+
+  /* location pill + its two arrows (the bar at the bottom of the globe) */
+  --info-tag-bg: rgba(55, 58, 58, 0.55);   /* dark see-through glass (last number = see-through-ness) */
+  --info-tag-text: #ffffff;
+  --info-tag-blur: 8px;                    /* frosted-glass blur behind it */
+  --info-tag-size: 14px;                   /* the city name's size */
+  --info-tag-width: 190px;                 /* pill width (fixed, so the arrows never jump) */
+  --info-tag-radius: 7px;                  /* corner roundness (pill + arrows) */
+  --info-dot-color: var(--yellow);         /* the dot — the site's yellow, set in index.css */
+  --info-arrow-size: 28px;                 /* the arrow buttons (and the pill's height) */
+  --info-arrow-hover-bg: rgba(55, 58, 58, 0.75);
+
+  /* ---------- END KNOBS ---------- */
+
+  display: contents; /* this wrapper is only here to share the knobs above */
+}
+
+/* ---------- the "i" button ---------- */
+.info__button {
+  position: fixed;
+  top: var(--info-top);
+  left: var(--info-left);
+  z-index: 34;
+  display: grid;
+  place-items: center;
+  width: var(--info-button-size);
+  height: var(--info-button-size);
+  padding: 0;
+  color: var(--info-text);
+  background: var(--info-bg);
+  border: 1px solid var(--info-border);
+  border-radius: calc(var(--info-radius) - 2px);
+  -webkit-backdrop-filter: blur(var(--info-blur));
+  backdrop-filter: blur(var(--info-blur));
+  cursor: pointer;
+  animation: info-in 600ms var(--info-ease) both;
+  transition:
+    opacity calc(var(--info-duration) / 2) ease,
+    background-color 0.2s ease;
+}
+.info__button:hover {
+  background: var(--info-hover-bg);
+}
+/* while the panel is open, its own header shows the icon instead */
+.info[data-open='true'] .info__button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes info-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- the panel ---------- */
+.info__panel {
+  position: fixed;
+  top: var(--info-top);
+  left: var(--info-left);
+  bottom: var(--info-bottom);
+  z-index: 36;
+  display: flex;
+  flex-direction: column;
+  width: min(var(--info-width), calc(100vw - var(--info-left) * 2));
+  padding: var(--info-padding);
+  color: var(--info-text);
+  background: var(--info-bg);
+  border: 1px solid var(--info-border);
+  border-radius: var(--info-radius);
+  -webkit-backdrop-filter: blur(var(--info-blur));
+  backdrop-filter: blur(var(--info-blur));
+
+  /* closed: parked just off the left edge (and hidden from keyboard focus) */
+  transform: translateX(calc(-100% - var(--info-left) - 8px));
+  overflow: hidden; /* the panel's rounded shape crops the globe */
+  visibility: hidden;
+  transition:
+    transform var(--info-duration) var(--info-ease),
+    visibility 0s linear var(--info-duration);
+}
+.info[data-open='true'] .info__panel {
+  transform: none;
+  visibility: visible;
+  transition:
+    transform var(--info-duration) var(--info-ease),
+    visibility 0s;
+}
+
+/* ---------- header: (i) Data ............ ✕ ---------- */
+.info__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--info-divider);
+}
+.info__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--info-title-font);
+  font-size: var(--info-title-size);
+  font-weight: 400;
+  text-transform: none;
+}
+.info__close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.info__close:hover {
+  background: var(--info-hover-bg);
+}
+
+/* ---------- the middle: the sections (Controls, Location …) ---------- */
+/* Takes the room between the header and the globe. If there isn't enough, the
+   globe area gives up some of its empty headroom first (see .info__globe-area);
+   only when that's used up does this scroll. */
+.info__body {
+  flex: 1 1 auto;
+  min-height: min-content; /* don't scroll while the globe area can still shrink */
+  overflow-y: auto;
+  padding-top: 18px;
+}
+/* short windows: not even a shrunken globe area can make everything fit, so
+   stop insisting on it — the globe area shrinks first (it's far more willing),
+   then this scrolls */
+@media (max-height: 990px) {
+  .info__body {
+    min-height: 0;
+  }
+}
+
+/* a titled group of controls, e.g. "Controls" */
+.info__section {
+  margin-bottom: 24px;
+}
+.info__section:last-child {
+  margin-bottom: 0; /* nothing below it to space from */
+}
+.info__section-title {
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  font-family: var(--info-title-font);
+  font-size: calc(var(--info-title-size) * 0.85);
+  font-weight: 400;
+  text-transform: none;
+  border-bottom: 1px solid var(--info-divider);
+}
+
+/* ---------- globe + location ---------- */
+/* full-bleed strip along the bottom of the panel: the negative margins cancel
+   the panel's padding so it touches the panel's left, right and bottom edges */
+.info__globe-area {
+  position: relative;
+  flex: 0 1 var(--info-globe-height); /* this tall if there's room, shorter if not */
+  min-height: var(--info-globe-min-height);
+  margin: 0 calc(var(--info-padding) * -1) calc(var(--info-padding) * -1);
+  overflow: hidden;
+}
+/* (short windows — see .info__body above: the globe area gives up room first) */
+@media (max-height: 990px) {
+  .info__globe-area {
+    flex-shrink: 40;
+  }
+}
+.info__globe {
+  position: absolute;
+  left: 50%;
+  bottom: var(--info-globe-bottom);
+  width: var(--info-globe-size);
+  aspect-ratio: 1;
+  transform: translateX(calc(-50% + var(--info-globe-shift-x)));
+}
+
+/* ---------- the location pill, with an arrow either side ---------- */
+.info__picker {
+  position: absolute;
+  left: 50%;
+  bottom: var(--info-padding);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  box-sizing: border-box;
+  width: var(--info-tag-width);
+  height: var(--info-arrow-size);
+  margin: 0;
+  padding: 0 10px 0 8px;
+  font-size: var(--info-tag-size);
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: var(--info-tag-text);
+  background: var(--info-tag-bg);
+  border-radius: var(--info-tag-radius);
+  -webkit-backdrop-filter: blur(var(--info-tag-blur));
+  backdrop-filter: blur(var(--info-tag-blur));
+}
+.info__tag-dot {
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: var(--info-dot-color);
+}
+.info__tag-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info__arrow {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--info-arrow-size);
+  height: var(--info-arrow-size);
+  padding: 0;
+  color: var(--info-tag-text);
+  background: var(--info-tag-bg);
+  border: none;
+  border-radius: var(--info-tag-radius);
+  -webkit-backdrop-filter: blur(var(--info-tag-blur));
+  backdrop-filter: blur(var(--info-tag-blur));
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.info__arrow:hover {
+  background: var(--info-arrow-hover-bg);
+}
+.info__arrow:focus-visible {
+  outline: 2px solid var(--info-dot-color);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info {
+    --info-duration: 1ms;
+  }
+  .info__button { animation: none; }
+}

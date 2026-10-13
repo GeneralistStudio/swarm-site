@@ -1,11 +1,11 @@
-.panel-footer {
+.page-footer {
   margin-top: 48px;
   padding-top: 40px;
   border-top: 1px solid var(--hairline);
   text-align: center;
 }
 
-.panel-footer__headline {
+.page-footer__headline {
   font-family: var(--font-alte);
   text-transform: none;
   font-weight: 400;
@@ -14,7 +14,7 @@
   margin: 0 0 24px;
 }
 
-.panel-footer__email {
+.page-footer__email {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +25,7 @@
   padding-bottom: 8px;
 }
 
-.panel-footer__email input {
+.page-footer__email input {
   flex: 1;
   border: none;
   background: transparent;
@@ -36,12 +36,12 @@
   outline: none;
 }
 
-.panel-footer__email input::placeholder {
+.page-footer__email input::placeholder {
   color: var(--fg);
   opacity: 0.45;
 }
 
-.panel-footer__email button {
+.page-footer__email button {
   border: none;
   background: transparent;
   font-family: inherit;
@@ -52,19 +52,14 @@
   opacity: 0.7;
 }
 
-.panel-footer__logo {
-  font-family: var(--font-display);
-  font-weight: 500;
-  text-transform: none;
-  font-size: clamp(56px, 12vw, 120px);
-  line-height: 1;
+.page-footer__logo {
   margin: 0;
+  line-height: 1;
 }
 
-.panel-footer__reg {
-  font-family: var(--font-alte);
-  font-size: 0.32em;
-  font-weight: 700;
-  vertical-align: super;
-  text-transform: none;
+/* the big swarm® at the very bottom of every page */
+.page-footer .wordmark {
+  font-size: clamp(56px, 12vw, 120px);
+  color: var(--page-text, #1b1c1a); /* fixed color — pages are always light */
+  transition: none;
 }

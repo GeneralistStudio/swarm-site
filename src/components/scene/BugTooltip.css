@@ -1,0 +1,133 @@
+/* ============================================================
+   BUG TOOLTIP — the card beside the swarm circle (only appears
+   while the Data panel is open and bugs are in the circle).
+
+   ▶ TO RESTYLE IT: change the values in the "DESIGN KNOBS" block.
+   ▶ The words/labels are in BugTooltip.jsx.
+   ============================================================ */
+.bug-tooltip {
+  /* ---------- DESIGN KNOBS ---------- */
+
+  /* position (relative to the circle) */
+  --tooltip-gap: 28px;           /* space between the circle's edge and the card */
+  --tooltip-offset-y: -40px;     /* move the card up (−) or down (+) from the circle's center */
+  --tooltip-width: 230px;
+
+  /* colors — two fixed looks, flipped at dawn and dusk (hours are set by
+     DAY_STARTS / NIGHT_STARTS in src/App.jsx). They don't fade through grey
+     in between: grey text on grey glass is unreadable. */
+  --tooltip-night-text: #ffffff;
+  --tooltip-night-card-bg: rgba(0, 0, 0, 0.42);   /* dark glass under white text */
+  --tooltip-day-text: #1b1c1a;
+  --tooltip-day-card-bg: rgba(255, 255, 255, 0.42); /* light glass under dark text */
+  --tooltip-mode-fade: 300ms;    /* the quick crossfade when it flips */
+  --tooltip-chip-bg: color-mix(in srgb, var(--tooltip-text) 16%, transparent);
+  --tooltip-chip-blur: 6px;
+  --tooltip-card-blur: 10px;
+  --tooltip-card-padding: 12px 14px;
+
+  /* typography */
+  --tooltip-chip-font: var(--font-alte);
+  --tooltip-chip-size: 14px;
+  --tooltip-label-font: var(--font-body);   /* CARRYING / CONTAGIOUS */
+  --tooltip-label-size: 9px;
+  --tooltip-label-spacing: 0.06em;
+  --tooltip-value-font: var(--font-alte);
+  --tooltip-value-size: 16px;
+
+  /* animation */
+  --tooltip-fade: 250ms;         /* fade in/out when bugs enter/leave the circle */
+
+  /* ---------- END KNOBS ---------- */
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3; /* above the canvas */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--tooltip-fade) ease;
+  will-change: transform;
+}
+.bug-tooltip[data-visible='true'] {
+  opacity: 1;
+}
+
+/* the look in use right now (night is the default; App.jsx sets data-daylight) */
+.bug-tooltip {
+  --tooltip-text: var(--tooltip-night-text);
+  --tooltip-card-bg: var(--tooltip-night-card-bg);
+}
+[data-daylight='day'] .bug-tooltip {
+  --tooltip-text: var(--tooltip-day-text);
+  --tooltip-card-bg: var(--tooltip-day-card-bg);
+}
+
+.bug-tooltip__card {
+  position: absolute;
+  top: var(--tooltip-offset-y);
+  /* --ring-radius is set by the canvas to match the circle's size */
+  left: calc(var(--ring-radius, 90px) + var(--tooltip-gap));
+  width: var(--tooltip-width);
+  padding: var(--tooltip-card-padding);
+  color: var(--tooltip-text);
+  background: var(--tooltip-card-bg);
+  border-radius: var(--radius-md);
+  -webkit-backdrop-filter: blur(var(--tooltip-card-blur));
+  backdrop-filter: blur(var(--tooltip-card-blur));
+  transition: color var(--tooltip-mode-fade) ease, background-color var(--tooltip-mode-fade) ease;
+}
+/* near the right edge of the screen the card flips to the circle's left side */
+.bug-tooltip[data-side='left'] .bug-tooltip__card {
+  left: auto;
+  right: calc(var(--ring-radius, 90px) + var(--tooltip-gap));
+  text-align: right;
+}
+.bug-tooltip[data-side='left'] .bug-tooltip__types {
+  justify-content: flex-end;
+}
+
+/* "Mosquito" "Tick" pills */
+.bug-tooltip__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.bug-tooltip__chip {
+  padding: 4px 10px;
+  font-family: var(--tooltip-chip-font);
+  font-size: var(--tooltip-chip-size);
+  line-height: 1.2;
+  text-transform: none;
+  background: var(--tooltip-chip-bg);
+  border-radius: var(--radius-md);
+  -webkit-backdrop-filter: blur(var(--tooltip-chip-blur));
+  backdrop-filter: blur(var(--tooltip-chip-blur));
+}
+
+.bug-tooltip__label {
+  margin: 0 0 2px;
+  font-family: var(--tooltip-label-font);
+  font-size: var(--tooltip-label-size);
+  letter-spacing: var(--tooltip-label-spacing);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.bug-tooltip__value {
+  margin: 0 0 10px;
+  font-family: var(--tooltip-value-font);
+  font-size: var(--tooltip-value-size);
+  line-height: 1.15;
+  text-transform: none;
+}
+
+.bug-tooltip__value:last-child {
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bug-tooltip { --tooltip-fade: 1ms; }
+}
