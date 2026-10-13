@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import Globe3D from '../globe/Globe3D';
-import TimelineScrubber from '../globe/TimelineScrubber';
-import { getGlobalStats } from '../../data/placeholderLocationData';
-import PanelFooter from './PanelFooter';
-import './SwarmPanel.css';
+import { Suspense, useState } from 'react';
+import { Globe3D } from '../components/globe/lazyGlobe';
+import TimelineScrubber from '../components/globe/TimelineScrubber';
+import { TIMELINE } from '../data/diseaseHotspots';
+import { getGlobalStats } from '../data/placeholderLocationData';
+import PageFooter from './PageFooter';
+import './EducationPage.css';
 
 const STAT_CARDS = [
   { label: 'Mosquito-borne diseases kill', key: 'bugDiseaseDeaths', suffix: '+' },
@@ -13,9 +14,11 @@ const STAT_CARDS = [
 
 const RESOURCE_CARDS = [0, 1, 2];
 
-export default function SwarmPanel() {
-  const [year, setYear] = useState(2025);
-  const [playing, setPlaying] = useState(true);
+export default function EducationPage() {
+  const [year, setYear] = useState(TIMELINE.today);
+  // the timeline stays still until you drag it or press ▶ (it plays by itself on
+  // the intro screen, but here the figures beside it would be counting up)
+  const [playing, setPlaying] = useState(false);
   const [cardIndex, setCardIndex] = useState(0);
 
   const stats = getGlobalStats(year);
@@ -23,15 +26,15 @@ export default function SwarmPanel() {
   const cardValue = stats[card.key];
 
   return (
-    <div className="swarm-panel">
-      <p className="eyebrow">The problem</p>
-      <h2 className="panel-headline">It's harder than ever to access nature.</h2>
+    <div className="education-page">
+      <p className="eyebrow">Education</p>
+      <h1 className="page-headline">It's harder than ever to access nature.</h1>
 
-      <div className="swarm-panel__map-row">
-        <div className="swarm-panel__data-card">
+      <div className="education-page__map-row">
+        <div className="education-page__data-card">
           <div className="legend">
             <span className="legend__dot" />
-            Mosquito territory
+            Insect-borne diseases
           </div>
           <TimelineScrubber year={year} onChange={setYear} playing={playing} onTogglePlay={() => setPlaying((p) => !p)} />
           <dl className="stat-list">
@@ -50,18 +53,20 @@ export default function SwarmPanel() {
           </dl>
         </div>
 
-        <div className="swarm-panel__globe">
-          <Globe3D interactive={false} autoRotate year={year} />
+        <div className="education-page__globe">
+          <Suspense fallback={null}>
+            <Globe3D interactive={false} autoRotate year={year} />
+          </Suspense>
         </div>
       </div>
 
-      <div className="swarm-panel__stat-carousel">
+      <div className="education-page__stat-carousel">
         <button type="button" onClick={() => setCardIndex((i) => (i - 1 + STAT_CARDS.length) % STAT_CARDS.length)} aria-label="Previous stat">
           ‹
         </button>
-        <div className="swarm-panel__stat-carousel-body">
-          <p className="swarm-panel__stat-label">{card.label}</p>
-          <p className="swarm-panel__stat-value">
+        <div className="education-page__stat-carousel-body">
+          <p className="education-page__stat-label">{card.label}</p>
+          <p className="education-page__stat-value">
             {formatCompact(cardValue)}
             {card.suffix}
           </p>
@@ -71,27 +76,27 @@ export default function SwarmPanel() {
         </button>
       </div>
 
-      <div className="swarm-panel__stat-dots">
+      <div className="education-page__stat-dots">
         {STAT_CARDS.map((c, i) => (
           <button
             key={c.key}
             type="button"
-            className={i === cardIndex ? 'swarm-panel__stat-dot swarm-panel__stat-dot--active' : 'swarm-panel__stat-dot'}
+            className={i === cardIndex ? 'education-page__stat-dot education-page__stat-dot--active' : 'education-page__stat-dot'}
             onClick={() => setCardIndex(i)}
             aria-label={`Show stat ${i + 1}`}
           />
         ))}
       </div>
 
-      <p className="swarm-panel__pitch">Bug repellent is by far the most effective way to protect yourself.</p>
+      <p className="education-page__pitch">Bug repellent is by far the most effective way to protect yourself.</p>
 
-      <div className="swarm-panel__read-more">
-        <button type="button" className="panel-button">
+      <div className="education-page__read-more">
+        <button type="button" className="page-button">
           Read more
         </button>
       </div>
 
-      <hr className="swarm-panel__divider" />
+      <hr className="education-page__divider" />
 
       <p className="eyebrow">More resources</p>
 
@@ -101,7 +106,7 @@ export default function SwarmPanel() {
         ))}
       </div>
 
-      <PanelFooter />
+      <PageFooter />
     </div>
   );
 }

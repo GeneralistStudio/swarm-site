@@ -2,5 +2,5 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  transition: background 8s linear;
+  transition: background var(--sky-transition, 8s) linear;
 }

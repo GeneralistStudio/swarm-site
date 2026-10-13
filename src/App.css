@@ -1,6 +1,16 @@
 .app-root {
+  /* how long the sky, the logo and the tooltip take to change color when the
+     time of day changes — slow and gentle by default… */
+  --sky-transition: 8s;
+
   position: relative;
   width: 100vw;
   height: 100dvh;
   overflow: hidden;
+}
+
+/* …but quick while you're dragging the Time of day slider, so the sky keeps up
+   with your hand */
+.app-root[data-scrubbing='true'] {
+  --sky-transition: 0.35s;
 }

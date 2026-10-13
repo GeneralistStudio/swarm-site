@@ -1,0 +1,89 @@
+/* ============================================================
+   LOCATION FACTS — the "Location" section in the Data panel
+   (region, temperature, mosquito + tick population).
+
+   ▶ TO RESTYLE IT: change the values in the "DESIGN KNOBS" block.
+   ▶ What's in it, and where the numbers come from:
+     src/data/locationFacts.js + LocationFacts.jsx.
+   ============================================================ */
+.location-facts {
+  /* ---------- DESIGN KNOBS ---------- */
+
+  /* layout */
+  --facts-column-gap: 20px;        /* between the two columns */
+  --facts-row-gap: 18px;           /* between the two rows */
+
+  /* type */
+  --facts-label-font: var(--font-body);     /* REGION, TEMPERATURE … */
+  --facts-label-size: 10px;
+  --facts-label-spacing: 0.06em;
+  --facts-label-opacity: 0.7;
+  --facts-value-font: var(--font-alte);     /* North America, 54°F, High … */
+  --facts-value-size: 19px;
+  --facts-alt-size: 13px;                   /* the °C beside the °F */
+
+  /* the population bars */
+  --facts-bar-height: 4px;
+  --facts-bar-track: rgba(27, 28, 26, 0.14);
+  --facts-bar-fill: rgba(27, 28, 26, 0.72);
+  --facts-bar-duration: 350ms;              /* how long the bar takes to slide when the year changes */
+
+  /* ---------- END KNOBS ---------- */
+}
+
+.location-facts__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--facts-row-gap) var(--facts-column-gap);
+  margin: 0;
+}
+
+.location-facts__item {
+  min-width: 0; /* lets long values wrap instead of widening the column */
+}
+
+.location-facts__label {
+  margin: 0 0 4px;
+  font-family: var(--facts-label-font);
+  font-size: var(--facts-label-size);
+  letter-spacing: var(--facts-label-spacing);
+  text-transform: uppercase;
+  opacity: var(--facts-label-opacity);
+}
+
+.location-facts__value {
+  margin: 0;
+  font-family: var(--facts-value-font);
+  font-size: var(--facts-value-size);
+  line-height: 1.15;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+.location-facts__alt {
+  font-size: var(--facts-alt-size);
+  opacity: 0.6;
+}
+
+.location-facts__bar {
+  height: var(--facts-bar-height);
+  margin-top: 8px;
+  overflow: hidden;
+  background: var(--facts-bar-track);
+  border-radius: calc(var(--facts-bar-height) / 2);
+}
+/* the fill is a full-width bar scaled from the left — scaling is smooth and
+   cheap to animate (it never has to re-lay-out the panel) */
+.location-facts__bar > span {
+  display: block;
+  height: 100%;
+  background: var(--facts-bar-fill);
+  transform-origin: left center;
+  transform: scaleX(var(--v, 0));
+  transition: transform var(--facts-bar-duration) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .location-facts__bar > span {
+    transition: none;
+  }
+}

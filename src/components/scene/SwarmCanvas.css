@@ -10,3 +10,77 @@
      instead of blending into a similarly-colored background */
   mix-blend-mode: difference;
 }
+
+/* The second canvas: the yellow highlight on diseased bugs. It sits right on
+   top of the bug canvas but does NOT use the "difference" blend — that would
+   turn yellow into its inverse (a dark blue smudge on a pale sky). It's shown
+   only while some bug is lit (SwarmCanvas.jsx turns it on and off), and lets
+   every click and the crosshair cursor through to the canvas underneath. */
+.swarm-canvas--highlight {
+  display: none;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+
+/* ---- the click ripple (built in softRipple.js) ----
+   Sits above the sky and grass but under the bug canvas, so the bugs stay
+   crisp while the ripple blurs/bends what's behind them. Nothing in here may
+   have its own opacity/filter on a PARENT of the blurred layer — that would
+   cut the blur off from the sky (each layer fades itself instead). */
+.swarm-ripples {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.swarm-ripple {
+  position: absolute;
+  pointer-events: none;
+}
+.swarm-ripple__warp,
+.swarm-ripple__shine {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- the grass wake (built in grassWake.js) ----
+   The water that follows the pointer as it moves over the grass. This box is
+   just the strip along the bottom of the screen that the grass fills, and clips
+   everything in it — so the sky is never disturbed. Same rule as above: nothing
+   here may have an opacity / filter / mask / clip-path on a PARENT of the bent
+   layer, or the bend gets cut off from the grass. SwarmCanvas.jsx reads this box
+   to know where "over the grass" is, so the knob below is the only place its
+   height lives. */
+.swarm-wake {
+  /* ---- DESIGN KNOB ---- */
+  --wake-zone-height: 25vh; /* how tall the strip is, measured up from the bottom of the screen */
+  /* ---------------------- */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--wake-zone-height);
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.swarm-wake__bend {
+  position: absolute;
+  pointer-events: none;
+}
+/* the light and shade on the waves. Faded out toward the top of the strip, so
+   it shows on the dense grass rather than on the sky between the blade tips.
+   (A mask is safe here — nothing in this box bends what's behind it.) */
+.swarm-wake__shine {
+  --wake-shine-full-at: 60%; /* DESIGN KNOB — how far down the strip the shading reaches full strength (0% = it doesn't fade at all) */
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 var(--wake-shine-full-at));
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 var(--wake-shine-full-at));
+}
+.swarm-wake__shine-canvas {
+  position: absolute;
+  pointer-events: none;
+}

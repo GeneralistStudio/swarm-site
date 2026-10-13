@@ -1,0 +1,79 @@
+/* ============================================================
+   PAGES — shared look for Product, Education, Company, Terms, Privacy.
+
+   ▶ TO RESTYLE: change the values in the "DESIGN KNOBS" block.
+   ▶ Each page's own layout lives next to it (ProductPage.css,
+     EducationPage.css, PageFooter.css).
+   ============================================================ */
+.page {
+  /* ---------- DESIGN KNOBS ---------- */
+  --page-bg: #e9e6df;                 /* page background color */
+  --page-text: #1b1c1a;
+  --page-max-width: 900px;            /* width of the centered content column */
+  --page-top-space: 130px;            /* space above the content (room for the menu) */
+  --page-side-space: 24px;            /* left/right margin on small screens */
+  --page-bottom-space: 80px;
+  --page-headline-size: clamp(34px, 5.6vw, 76px);   /* the big title */
+  --page-headline-line-height: 1.05;
+  --page-eyebrow-size: 11px;          /* the small label above the title */
+  --page-fade-duration: 500ms;        /* page fade-in when you navigate */
+  /* ---------- END KNOBS ---------- */
+
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow-y: auto;
+  padding: var(--page-top-space) var(--page-side-space) var(--page-bottom-space);
+  color: var(--page-text);
+  background: var(--page-bg);
+  animation: page-in var(--page-fade-duration) ease both;
+}
+
+@keyframes page-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.page__inner {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+}
+
+/* the small label above each page's title ("Education", "Product" …) */
+.eyebrow {
+  font-size: var(--page-eyebrow-size);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0 0 14px;
+}
+
+/* the big page title */
+.page-headline {
+  font-family: var(--font-alte);
+  font-weight: 400;
+  text-transform: none;
+  font-size: var(--page-headline-size);
+  line-height: var(--page-headline-line-height);
+  letter-spacing: -0.01em;
+  margin: 0 0 40px;
+  max-width: 22ch;
+}
+
+/* a plain filled button (used by "Read more") */
+.page-button {
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page { animation: none; }
+}

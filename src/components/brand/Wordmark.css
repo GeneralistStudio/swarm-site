@@ -1,0 +1,29 @@
+/* ============================================================
+   WORDMARK — the "swarm®" logo text.
+   Font comes from --font-display in src/index.css (Vibrations).
+   Where it appears (menu bar, intro hero, page footer) each place
+   sets its own size in its own CSS file.
+   ============================================================ */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 500;
+  /* the wordmark is literal lowercase text ("swarm") — override the
+     site-wide uppercase so it isn't shouted into "SWARM" */
+  text-transform: none;
+  /* --ink is set in App.jsx from the same local-hour clock the sky and
+     grass use: white at night, near-black in daytime. Anywhere the logo
+     sits on a light card (menu, pages) overrides this with a fixed color. */
+  color: var(--ink, #1b1c1a);
+  /* matches the sky's color transition (--sky-transition, set in App.css) */
+  transition: color var(--sky-transition, 8s) linear;
+  line-height: 1;
+}
+
+/* the little ® — Alte Haas Grotesk, superscript */
+.wordmark__reg {
+  font-family: var(--font-alte);
+  font-size: 0.34em;
+  font-weight: 700;
+  vertical-align: super;
+  text-transform: none;
+}

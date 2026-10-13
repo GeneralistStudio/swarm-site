@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import './PanelFooter.css';
+import Wordmark from '../components/brand/Wordmark';
+import './PageFooter.css';
 
-// Shared by AboutPanel and SwarmPanel — both end on the same "enjoy the
-// outdoors" pitch + email capture + wordmark, so it lives in one place.
-export default function PanelFooter() {
+// Shared by every page — each ends on the same "enjoy the outdoors" pitch +
+// email capture + big wordmark, so it lives in one place. (PageFooter.css)
+export default function PageFooter() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
@@ -14,14 +15,14 @@ export default function PanelFooter() {
   }
 
   return (
-    <div className="panel-footer">
-      <h3 className="panel-footer__headline">
+    <div className="page-footer">
+      <h3 className="page-footer__headline">
         Enjoy the outdoors.
         <br />
         Be free from fear.
       </h3>
 
-      <form className="panel-footer__email" onSubmit={handleSubmit}>
+      <form className="page-footer__email" onSubmit={handleSubmit}>
         <input
           type="email"
           required
@@ -32,8 +33,8 @@ export default function PanelFooter() {
         <button type="submit">{submitted ? 'Added' : 'Submit'}</button>
       </form>
 
-      <p className="panel-footer__logo">
-        swarm<sup className="panel-footer__reg">®</sup>
+      <p className="page-footer__logo">
+        <Wordmark />
       </p>
     </div>
   );

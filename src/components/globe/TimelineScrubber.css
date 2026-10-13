@@ -41,6 +41,8 @@
   background: var(--accent);
   border-radius: 2px;
   pointer-events: none;
+  /* glide between the ~15-a-second updates while it plays */
+  transition: width 70ms linear;
 }
 
 .timeline-track::before {

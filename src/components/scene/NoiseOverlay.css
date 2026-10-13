@@ -5,23 +5,34 @@
   pointer-events: none;
   opacity: 0.15;
   mix-blend-mode: overlay;
+  overflow: hidden;
 }
 
+/* One tile of noise, repeated, one tile larger than the screen on every side
+   (so there's room to shift it without ever showing an edge). Six hard jumps
+   per cycle = six "frames" of grain — see NoiseOverlay.jsx. The jumps are just
+   a change of position, which the browser does without redrawing anything. */
 .noise-frame {
   position: absolute;
-  inset: 0;
+  inset: -150px; /* = NOISE_TILE_PX */
   background-repeat: repeat;
   background-size: 150px 150px;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  animation: noise-flicker 0.6s step-end infinite;
+}
+
+/* the six positions (all within one tile of 150px, any mix of x/y that isn't
+   a multiple of the tile gives a different-looking pattern) */
+@keyframes noise-flicker {
+  0%      { transform: translate(0, 0); }
+  16.667% { transform: translate(-53px, -97px); }
+  33.333% { transform: translate(-121px, -41px); }
+  50%     { transform: translate(-17px, -131px); }
+  66.667% { transform: translate(-89px, -12px); }
+  83.333% { transform: translate(-137px, -76px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .noise-frame {
     animation: none;
-    opacity: 0;
-  }
-  .noise-frame:first-child {
-    opacity: 1;
   }
 }

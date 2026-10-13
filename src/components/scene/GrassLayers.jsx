@@ -76,7 +76,13 @@ export default function GrassLayers({ hour, blurred = false }) {
       const heightPx = (layer.heightVh / 100) * height;
       const tileWidth = heightPx * ASPECT_RATIO;
       const step = tileWidth * (1 - OVERLAP);
-      const count = Math.max(2, Math.ceil(width / step) + 3);
+      // How many tiles are needed? The layer slides left by exactly one `step`
+      // per loop and then jumps back, so it has to cover the screen's width
+      // plus that one step of slack — and nothing more (each tile is a big
+      // masked graphic; every extra one costs memory and drawing time even
+      // though it sits off-screen). Each tile is wider than a step (they
+      // overlap), so this also leaves a margin past the screen edge.
+      const count = Math.max(2, Math.ceil(width / step) + 1);
       const duration = step / layer.speed;
       const tiles = Array.from({ length: count }, (_, i) => i * step);
       return { ...layer, heightPx, tileWidth, step, duration, tiles };

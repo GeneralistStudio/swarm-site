@@ -7,10 +7,25 @@
     <title>swarm-site</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The wordmark font is on the very first screen, so start fetching it
+         now instead of waiting for the stylesheet to say so -->
+    <link rel="preload" href="/src/assets/fonts/VibrationsVF.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- IBM Plex Mono from Google. media="print" + onload makes the browser
+         fetch it WITHOUT holding up the first paint: the page shows right
+         away in the fallback mono font (see --font-body) and swaps when this
+         arrives. (A plain rel="stylesheet" here blocks everything.) -->
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

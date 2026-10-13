@@ -1,0 +1,55 @@
+.intro-globe {
+  position: fixed;
+  z-index: 15;
+}
+
+/* the globe's code downloads after the first screen has drawn, so when it
+   lands it fades in instead of popping. (This targets ONLY the globe's own
+   wrapper, by class — a blanket ".intro-globe > div" would also catch the name
+   tag below, and the fade-in's "stay at the end value" would then hold it
+   permanently visible.) */
+.intro-globe__canvas {
+  animation: intro-globe-arrive 0.6s ease-out both;
+}
+@keyframes intro-globe-arrive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- the name tag that follows the pointer over a city dot ---------- */
+.intro-globe {
+  /* ---------- DESIGN KNOBS ---------- */
+  --intro-label-bg: rgba(55, 58, 58, 0.78);  /* dark see-through glass, like the pill in the Data panel */
+  --intro-label-text: #ffffff;
+  --intro-label-size: 11px;
+  --intro-label-radius: 7px;
+  --intro-label-offset-x: 14px;              /* how far right of the pointer */
+  --intro-label-offset-y: -34px;             /* how far above it (negative = above) */
+  /* ---------- END KNOBS ---------- */
+}
+.intro-globe__label {
+  position: fixed; /* positioned from the pointer's page coordinates (see IntroGlobe.jsx) */
+  top: 0;
+  left: 0;
+  z-index: 2;
+  margin: var(--intro-label-offset-y) 0 0 var(--intro-label-offset-x);
+  padding: 6px 10px;
+  font-size: var(--intro-label-size);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--intro-label-text);
+  background: var(--intro-label-bg);
+  border-radius: var(--intro-label-radius);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.intro-globe__label[data-visible='true'] {
+  opacity: 1;
+}

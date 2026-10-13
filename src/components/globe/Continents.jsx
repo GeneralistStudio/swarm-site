@@ -22,7 +22,7 @@ export default function Continents({ radius = 1, color = '#1b1c1a' }) {
   return (
     <group>
       {segments.map((pts, i) => (
-        <line key={i}>
+        <line key={i} renderOrder={2}>
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"
@@ -31,7 +31,7 @@ export default function Continents({ radius = 1, color = '#1b1c1a' }) {
               itemSize={3}
             />
           </bufferGeometry>
-          <lineBasicMaterial color={color} />
+          <lineBasicMaterial color={color} transparent />
         </line>
       ))}
     </group>

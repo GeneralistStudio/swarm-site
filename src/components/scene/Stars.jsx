@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { interpolateScalar } from '../../hooks/useTimeOfDay';
+import { useLingering } from '../../hooks/useLingering';
 import './Stars.css';
 
 const STAR_COUNT = 26;
@@ -15,11 +16,15 @@ const OPACITY_KEYFRAMES = [
   { hour: 24, value: 0.9 },
 ];
 
-// Only rendered on the intro (globe) screen. Pure CSS drift — each star just
-// eases back and forth along a short randomized path — so there's no
-// per-frame JS cost.
+// Only on the intro (globe) screen. Pure CSS drift — each star just eases back
+// and forth along a short randomized path — so there's no per-frame JS cost.
+// Once the intro has faded out (1s, see Stars.css) the stars are removed from
+// the page altogether, so their 26 animations stop running.
+const FADE_OUT_MS = 1100;
+
 export default function Stars({ active, hour }) {
   const opacity = interpolateScalar(hour, OPACITY_KEYFRAMES);
+  const show = useLingering(active, FADE_OUT_MS);
 
   const stars = useMemo(
     () =>
@@ -34,6 +39,8 @@ export default function Stars({ active, hour }) {
       })),
     []
   );
+
+  if (!show) return null;
 
   return (
     <div

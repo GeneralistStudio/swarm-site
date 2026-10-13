@@ -47,6 +47,11 @@
   --accent: #1b1c1a;
   --accent-contrast: #f4f4ec;
 
+  /* the site's yellow — the dot in the location pill, the slider handle, the
+     glowing diseased bugs, the selected city on the globe, the intro glow.
+     Change it here and they all follow. */
+  --yellow: #F0FF8E;
+
   --radius-sm: 5px;
   --radius-md: 5px;
   --radius-lg: 22px;

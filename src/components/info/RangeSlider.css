@@ -1,0 +1,217 @@
+/* ============================================================
+   RANGE SLIDER — the Year and Time of day controls in the Data panel.
+
+   ▶ TO RESTYLE THEM: change the values in the "DESIGN KNOBS" block.
+   ▶ The year range (1900–2100) and "today" are in src/data/diseaseHotspots.js.
+   ============================================================ */
+.range-slider {
+  /* ---------- DESIGN KNOBS ---------- */
+
+  /* the line */
+  --slider-track: rgba(27, 28, 26, 0.22);   /* the part of the line after the thumb */
+  --slider-fill: rgba(27, 28, 26, 0.7);     /* the part before it */
+  --slider-track-height: 1px;
+
+  /* the "Time of day" line: it's painted as the day itself, left to right
+     from midnight — night, dawn, the yellow of day, dusk, night again */
+  --slider-night: #1c1d33;
+  --slider-dawn: #f0b7a0;
+  --slider-day: var(--yellow);
+  --slider-gradient: linear-gradient(
+    to right,
+    var(--slider-night) 0%,
+    var(--slider-night) 14%,
+    var(--slider-dawn) 27%,
+    var(--slider-day) 38%,
+    var(--slider-day) 66%,
+    var(--slider-dawn) 79%,
+    var(--slider-night) 90%,
+    var(--slider-night) 100%
+  );
+  --slider-gradient-height: 4px;
+
+  /* the round handle */
+  --slider-thumb-size: 12px;
+  --slider-thumb-color: var(--yellow);
+  --slider-thumb-border: rgba(27, 28, 26, 0.55);
+
+  /* type */
+  --slider-label-font: var(--font-body);    /* the label, the end labels, RESET */
+  --slider-label-size: 10px;
+  --slider-label-spacing: 0.06em;
+  --slider-value-font: var(--font-alte);    /* the big current year */
+  --slider-value-size: 26px;
+
+  /* the RESET button */
+  --slider-button-border: rgba(27, 28, 26, 0.35);
+  --slider-button-radius: var(--radius-sm);
+
+  /* ---------- END KNOBS ---------- */
+
+  color: inherit;
+}
+
+.range-slider__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.range-slider__label {
+  font-family: var(--slider-label-font);
+  font-size: var(--slider-label-size);
+  letter-spacing: var(--slider-label-spacing);
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.range-slider__value {
+  font-family: var(--slider-value-font);
+  font-size: var(--slider-value-size);
+  line-height: 1;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.range-slider__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.range-slider__end {
+  font-family: var(--slider-label-font);
+  font-size: var(--slider-label-size);
+  letter-spacing: var(--slider-label-spacing);
+  opacity: 0.7;
+}
+
+.range-slider__track {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: var(--slider-thumb-size);
+}
+
+/* ---------- the range input, restyled ---------- */
+.range-slider input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: var(--slider-thumb-size);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.range-slider input[type='range']:focus {
+  outline: none;
+}
+.range-slider input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(27, 28, 26, 0.25);
+}
+.range-slider input[type='range']:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(27, 28, 26, 0.25);
+}
+
+/* the line (--p = how far along the thumb is, set from the component) */
+.range-slider input[type='range']::-webkit-slider-runnable-track {
+  height: var(--slider-track-height);
+  background: linear-gradient(
+    to right,
+    var(--slider-fill) calc(var(--p) * 100%),
+    var(--slider-track) calc(var(--p) * 100%)
+  );
+}
+.range-slider input[type='range']::-moz-range-track {
+  height: var(--slider-track-height);
+  background: linear-gradient(
+    to right,
+    var(--slider-fill) calc(var(--p) * 100%),
+    var(--slider-track) calc(var(--p) * 100%)
+  );
+}
+
+/* "Time of day": the line is the painted day instead of plain fill/track */
+.range-slider--gradient input[type='range']::-webkit-slider-runnable-track {
+  height: var(--slider-gradient-height);
+  border-radius: calc(var(--slider-gradient-height) / 2);
+  background: var(--slider-gradient);
+}
+.range-slider--gradient input[type='range']::-moz-range-track {
+  height: var(--slider-gradient-height);
+  border-radius: calc(var(--slider-gradient-height) / 2);
+  background: var(--slider-gradient);
+}
+.range-slider--gradient input[type='range']::-webkit-slider-thumb {
+  margin-top: calc((var(--slider-gradient-height) - var(--slider-thumb-size)) / 2);
+}
+
+/* the handle */
+.range-slider input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  margin-top: calc((var(--slider-track-height) - var(--slider-thumb-size)) / 2);
+  border: 1px solid var(--slider-thumb-border);
+  border-radius: 50%;
+  background: var(--slider-thumb-color);
+  transition: transform 0.15s ease;
+}
+.range-slider input[type='range']::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  border: 1px solid var(--slider-thumb-border);
+  border-radius: 50%;
+  background: var(--slider-thumb-color);
+  transition: transform 0.15s ease;
+}
+.range-slider input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.range-slider input[type='range']:active::-moz-range-thumb {
+  transform: scale(1.15);
+}
+
+/* the little tick under the line at today's spot (it's inset by half a thumb
+   on each side because that's how far the thumb can travel) */
+.range-slider__now {
+  position: absolute;
+  top: 100%;
+  left: calc(var(--slider-thumb-size) / 2 + (100% - var(--slider-thumb-size)) * var(--today));
+  width: 1px;
+  height: 5px;
+  background: var(--slider-fill);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ---------- RESET ---------- */
+.range-slider__reset {
+  margin-top: 20px;
+  padding: 5px 10px;
+  font-family: var(--slider-label-font);
+  font-size: var(--slider-label-size);
+  letter-spacing: var(--slider-label-spacing);
+  text-transform: uppercase;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--slider-button-border);
+  border-radius: var(--slider-button-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+.range-slider__reset:hover:not(:disabled) {
+  background: rgba(27, 28, 26, 0.06);
+}
+/* already on today — nothing to reset */
+.range-slider__reset:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* more than one in a row: a gap between them */
+.range-slider + .range-slider {
+  margin-top: 32px;
+}
